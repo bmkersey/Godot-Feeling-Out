@@ -5,7 +5,7 @@ const ACCEL = 10.0
 
 var input: Vector2
 var is_player_facing_right = true
-
+@onready var state_machine:CharacterStateMachine = $CharacterStateMachine
 @onready var animationPlayer = $AnimationPlayer
 @onready var sprite = $Sprite2D
 @onready var animationTree = $AnimationTree
@@ -28,13 +28,14 @@ func _ready():
 	
 func _physics_process(delta):
 	var playerInput = get_input()
+	if state_machine.check_if_can_move():
+		velocity = lerp(velocity, playerInput * SPEED, delta*ACCEL)
 	
-	velocity = lerp(velocity, playerInput * SPEED, delta*ACCEL)
-	if playerInput.x !=0:
+	if playerInput.x !=0 && state_machine.check_if_can_move():
 		if playerInput.x < 0 && !sprite.flip_h:
 			sprite.flip_h = true
 		if playerInput.x > 0 && sprite.flip_h:
 			sprite.flip_h = false
 	move_and_slide()
-
+	
 	update_animations(playerInput)
