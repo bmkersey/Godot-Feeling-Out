@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg8r7cjc7rucf"]
+[gd_scene load_steps=6 format=3 uid="uid://dg8r7cjc7rucf"]
 
 [ext_resource type="Texture2D" uid="uid://no0k4i5sjp35" path="res://assets/FDR_Dungeon.png" id="1_qiivr"]
 [ext_resource type="PackedScene" uid="uid://bnviiqnp5aqve" path="res://player/player.tscn" id="2_5dhs0"]
+[ext_resource type="PackedScene" uid="uid://88n1u5g076hb" path="res://enemies/slime/slime.tscn" id="3_8uegx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p2ih8"]
 texture = ExtResource("1_qiivr")
@@ -2699,3 +2700,6 @@ polygon = PackedVector2Array(1103, 85, 1101, 620, 47, 625, 45, 62, 556, 62, 585,
 y_sort_enabled = false
 position = Vector2(484, 297)
 scale = Vector2(1.5, 1.5)
+
+[node name="Slime" parent="." instance=ExtResource("3_8uegx")]
+position = Vector2(697, 301)

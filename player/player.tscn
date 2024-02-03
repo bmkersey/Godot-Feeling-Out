@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bnviiqnp5aqve"]
+[gd_scene load_steps=33 format=3 uid="uid://bnviiqnp5aqve"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_mvysp"]
 [ext_resource type="Texture2D" uid="uid://cvddac5jelbra" path="res://player/sprites/fire_FREE_SpriteSheet_288x128.png" id="2_yci6b"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://player/GroundState.gd" id="4_a82nv"]
 [ext_resource type="Script" path="res://player/Attack.gd" id="5_5nmmc"]
 [ext_resource type="Script" path="res://player/Current_State.gd" id="6_txct1"]
+[ext_resource type="Script" path="res://player/Attack_1_Hitbox.gd" id="7_s07sb"]
+[ext_resource type="Script" path="res://player/Attack_1_Collision.gd" id="8_txwbk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ndt3k"]
 size = Vector2(31, 19)
@@ -112,10 +114,21 @@ tracks/3/keys = {
 "update": 1,
 "values": [252, 253, 254, 255, 256, 257, 258]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Attack_1_Hitbox:monitoring")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="Animation" id="Animation_ctsnm"]
 resource_name = "attack_2"
-loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -384,6 +397,12 @@ _data = {
 "test": SubResource("Animation_b1qtv")
 }
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jkrwn"]
+animation = &"attack_1"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7sn0v"]
+animation = &"attack_2"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_rkphd"]
 animation = &"idle"
 
@@ -412,12 +431,6 @@ blend_point_4/node = SubResource("AnimationNodeAnimation_5pe1b")
 blend_point_4/pos = Vector2(1, 0)
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jkrwn"]
-animation = &"attack_1"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7sn0v"]
-animation = &"attack_2"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gpqw6"]
 advance_mode = 2
 
@@ -430,22 +443,25 @@ advance_mode = 2
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7h7yc"]
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_wr7b2"]
-states/Move/node = SubResource("AnimationNodeBlendSpace2D_ei27e")
-states/Move/position = Vector2(341, 149)
 states/Start/position = Vector2(203, 149)
 states/attack_1/node = SubResource("AnimationNodeAnimation_jkrwn")
 states/attack_1/position = Vector2(552, 149)
 states/attack_2/node = SubResource("AnimationNodeAnimation_7sn0v")
 states/attack_2/position = Vector2(515, 37)
-transitions = ["Start", "Move", SubResource("AnimationNodeStateMachineTransition_gpqw6"), "Move", "attack_1", SubResource("AnimationNodeStateMachineTransition_pngih"), "attack_1", "Move", SubResource("AnimationNodeStateMachineTransition_cwbcd"), "attack_1", "attack_2", SubResource("AnimationNodeStateMachineTransition_ha3a8"), "attack_2", "Move", SubResource("AnimationNodeStateMachineTransition_7h7yc")]
+states/move/node = SubResource("AnimationNodeBlendSpace2D_ei27e")
+states/move/position = Vector2(341, 149)
+transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_gpqw6"), "move", "attack_1", SubResource("AnimationNodeStateMachineTransition_pngih"), "attack_1", "move", SubResource("AnimationNodeStateMachineTransition_cwbcd"), "attack_1", "attack_2", SubResource("AnimationNodeStateMachineTransition_ha3a8"), "attack_2", "move", SubResource("AnimationNodeStateMachineTransition_7h7yc")]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_igdje"]
+size = Vector2(47, 41)
 
 [node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
 script = ExtResource("1_mvysp")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="PlayerCollision2D" type="CollisionShape2D" parent="."]
 y_sort_enabled = true
-position = Vector2(2, 11)
+position = Vector2(0.5, 11)
 shape = SubResource("RectangleShape2D_ndt3k")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -466,7 +482,7 @@ libraries = {
 }
 tree_root = SubResource("AnimationNodeStateMachine_wr7b2")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Move/blend_position = Vector2(0, 0)
+parameters/move/blend_position = Vector2(0, 0)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(99, -35)
@@ -485,17 +501,37 @@ animationTree = NodePath("../AnimationTree")
 [node name="Ground" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("attack_state")]
 script = ExtResource("4_a82nv")
 attack_state = NodePath("../Attack")
-attack_animation = "attack_1"
 
-[node name="Attack" type="Node" parent="CharacterStateMachine"]
+[node name="Attack" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("return_state")]
 script = ExtResource("5_5nmmc")
+return_state = NodePath("../Ground")
 can_move = false
 
+[node name="Timer" type="Timer" parent="CharacterStateMachine/Attack"]
+wait_time = 0.4
+one_shot = true
+
 [node name="Current_State" type="Label" parent="." node_paths=PackedStringArray("state_machine")]
-offset_left = -41.0
-offset_top = -49.0
-offset_right = 58.0
-offset_bottom = -26.0
+offset_left = -44.0
+offset_top = -48.0
+offset_right = 55.0
+offset_bottom = -25.0
 text = "State:"
 script = ExtResource("6_txct1")
 state_machine = NodePath("../CharacterStateMachine")
+
+[node name="Attack_1_Hitbox" type="Area2D" parent="." node_paths=PackedStringArray("player", "facing_collision_shape_2d")]
+monitoring = false
+script = ExtResource("7_s07sb")
+player = NodePath("..")
+facing_collision_shape_2d = NodePath("Attack_1_Collision")
+
+[node name="Attack_1_Collision" type="CollisionShape2D" parent="Attack_1_Hitbox"]
+position = Vector2(41.5, 0)
+shape = SubResource("RectangleShape2D_igdje")
+script = ExtResource("8_txwbk")
+facing_left_pos = Vector2(-41.5, 0)
+facing_right_pos = Vector2(41.5, 0)
+
+[connection signal="animation_finished" from="AnimationTree" to="CharacterStateMachine/Attack" method="_on_animation_tree_animation_finished"]
+[connection signal="body_entered" from="Attack_1_Hitbox" to="Attack_1_Hitbox" method="_on_body_entered"]

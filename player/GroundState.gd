@@ -2,9 +2,9 @@ extends State
 
 class_name GroundState
 @export var attack_state: State
-@export var attack_animation: String = "attack"
+@export var attack_animation: String = "attack_1"
 
-func state_process(delta):
+func state_process(_delta):
 	pass
 	
 func state_input(event:InputEvent):
