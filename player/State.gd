@@ -7,6 +7,9 @@ class_name State
 var character : CharacterBody2D
 var playback : AnimationNodeStateMachinePlayback
 var next_state: State
+
+signal interruptState(newState: State)
+
 func state_process(_delta):
 	pass
 func state_input(_event:InputEvent):

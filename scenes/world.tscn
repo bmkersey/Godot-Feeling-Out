@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dg8r7cjc7rucf"]
+[gd_scene load_steps=7 format=3 uid="uid://dg8r7cjc7rucf"]
 
 [ext_resource type="Texture2D" uid="uid://no0k4i5sjp35" path="res://assets/FDR_Dungeon.png" id="1_qiivr"]
 [ext_resource type="PackedScene" uid="uid://bnviiqnp5aqve" path="res://player/player.tscn" id="2_5dhs0"]
 [ext_resource type="PackedScene" uid="uid://88n1u5g076hb" path="res://enemies/slime/slime.tscn" id="3_8uegx"]
+[ext_resource type="PackedScene" uid="uid://pdkefakw815f" path="res://UI/health_change_manager.tscn" id="4_4bmub"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p2ih8"]
 texture = ExtResource("1_qiivr")
@@ -2703,3 +2704,5 @@ scale = Vector2(1.5, 1.5)
 
 [node name="Slime" parent="." instance=ExtResource("3_8uegx")]
 position = Vector2(697, 301)
+
+[node name="HealthChangeManager" parent="." instance=ExtResource("4_4bmub")]

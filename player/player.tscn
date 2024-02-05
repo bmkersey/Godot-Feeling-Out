@@ -233,6 +233,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id="Animation_3olof"]
 resource_name = "idle"
 length = 0.81
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -455,8 +456,9 @@ transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_igdje"]
 size = Vector2(47, 41)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
 y_sort_enabled = true
+collision_layer = 3
 script = ExtResource("1_mvysp")
 
 [node name="PlayerCollision2D" type="CollisionShape2D" parent="."]
